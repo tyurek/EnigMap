@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                 libgtest-dev \
                 libboost-dev \
                 libssl-dev \
-                libssl1.1 \
+                #libssl1.1 \
                 lcov \
                 ninja-build \
                 python3 \
