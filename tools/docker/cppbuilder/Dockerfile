@@ -5,7 +5,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=Europe/Lisbon
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN sed -i -e's/ main/ main contrib non-free/g' /etc/apt/sources.list
+RUN sed -i -e's/ main/ testing main contrib non-free/g' /etc/apt/sources.list
+RUN sed -i -e's/ bullseye/ bookworm/g' /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
                 build-essential \
                 clang \
@@ -25,8 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                 libboost-dev \
                 libssl-dev \
                 libssl1.1 \
-		libclang-common-11-dev \
-		libgcc-10-dev \
+		#libclang-common-11-dev \
+		libgcc-11-dev \
 		libclang-common-13-dev \
 		lcov \
                 ninja-build \
@@ -34,6 +35,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                 python3-pip \
                 python-is-python3 \
                 wget \
+                vim \
+                nasm \
                 unzip \
         && rm -rf /var/lib/apt/lists/*
 
@@ -46,6 +49,11 @@ RUN pip install cppcheck-codequality matplotlib numpy
 # sgx sdk
 COPY --from=initc3/linux-sgx:2.17 /opt/sgxsdk /opt/sgxsdk
 COPY --from=initc3/linux-sgx:2.17 /opt/sgxsdk /opt/sgxsdk
+COPY --from=initc3/linux-sgx:2.17 /opt /opt
+#COPY --from=initc3/linux-sgx:2.1.3 /opt/sgxsdk /opt/sgxsdk
+#COPY --from=initc3/linux-sgx:2.1.3 /opt/sgxsdk /opt/sgxsdk
+#COPY --from=initc3/linux-sgx:2.1.3 /opt /opt
+
 RUN echo "source /opt/sgxsdk/environment" > /startsgxenv.sh \
         && chmod +x /startsgxenv.sh \
         && echo "source /opt/sgxsdk/environment" >> /root/.bashrc
